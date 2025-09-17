@@ -1,4 +1,5 @@
-import { Address } from '@ton/core';
+import { Address } from "@ton/core";
+import { inflate } from "pako";
 
 interface BillData {
   billAddress: string;
@@ -21,37 +22,41 @@ class BillsService {
 
   async loadBills(): Promise<void> {
     if (this.billsData) return;
-    
+
     if (this.loadingPromise) {
       return this.loadingPromise;
     }
 
-    // Use relative path that works both locally and on GitHub Pages
-    const billsPath = import.meta.env.BASE_URL + 'bills.gz';
-    this.loadingPromise = fetch(billsPath, {
-      headers: {
-        'Accept-Encoding': 'gzip',
-        'Accept': 'application/json'
-      }
-    })
-      .then(res => {
+    const billsPath = "https://1ixi1.github.io/ton-unlocker/bills.gz";
+    console.log(billsPath);
+
+    this.loadingPromise = fetch(billsPath)
+      .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
-        return res.json();
+        return res.arrayBuffer();
+      })
+      .then((compressedData) => {
+        const decompressedData = inflate(new Uint8Array(compressedData), {
+          to: "string",
+        });
+        return JSON.parse(decompressedData);
       })
       .then((data: BillsData) => {
         this.billsData = data;
-        
+
         // Create a map for quick lookup by user address
-        data.bills.forEach(bill => {
+        data.bills.forEach((bill) => {
           // Normalize address to raw format for consistent lookup
-          const normalizedAddress = Address.parse(bill.userAddress).toRawString();
+          const normalizedAddress = Address.parse(
+            bill.userAddress
+          ).toRawString();
           this.userToBillMap.set(normalizedAddress, bill);
         });
       })
-      .catch(error => {
-        console.error('Failed to load bills data:', error);
+      .catch((error) => {
+        console.error("Failed to load bills data:", error);
         throw error;
       });
 
@@ -60,7 +65,7 @@ class BillsService {
 
   async getBillByUserAddress(userAddress: string): Promise<BillData | null> {
     await this.loadBills();
-    
+
     try {
       const normalizedAddress = Address.parse(userAddress).toRawString();
       return this.userToBillMap.get(normalizedAddress) || null;
@@ -71,9 +76,9 @@ class BillsService {
 
   async getLockerData() {
     await this.loadBills();
-    
+
     if (!this.billsData) {
-      throw new Error('Bills data not loaded');
+      throw new Error("Bills data not loaded");
     }
 
     return {
