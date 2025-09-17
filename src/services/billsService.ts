@@ -27,7 +27,7 @@ class BillsService {
       return this.loadingPromise;
     }
 
-    const billsPath = "https://1ixi1.github.io/ton-unlocker/bills.gz";
+    const billsPath = "https://unlocker.ton.org/bills.gz";
     console.log(billsPath);
 
     this.loadingPromise = fetch(billsPath)
