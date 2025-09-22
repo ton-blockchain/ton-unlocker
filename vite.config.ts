@@ -25,6 +25,6 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: ['c0d32de0b98b.ngrok-free.app', 'unlocker.ton.org', '1ixi1.github.io'],
+    allowedHosts: ['c0d32de0b98b.ngrok-free.app', 'locker.ton.org', '1ixi1.github.io'],
   },
 })

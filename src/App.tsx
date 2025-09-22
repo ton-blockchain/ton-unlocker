@@ -115,7 +115,7 @@ function AppContent() {
 
 function App() {
   const isTestnet = useIsTestnet();
-  const manifestUrl = `https://1ixi1.github.io/ton-unlocker/tonconnect-manifest.json`;
+  const manifestUrl = `https://locker.ton.org/tonconnect-manifest.json`;
   console.log("Manifest URL: " + manifestUrl);
 
   return (

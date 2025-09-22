@@ -18,10 +18,10 @@ yarn build
 ## Usage
 
 ### Mainnet
-Visit the app at https://1ixi1.github.io/ton-vesting-unlocker
+Visit the app at https://locker.ton.org
 
 ### Testnet
-Add `?testnet=true` parameter: https://1ixi1.github.io/ton-vesting-unlocker?testnet=true
+Add `?testnet=true` parameter: https://locker.ton.org/?testnet=true
 
 ## Contract Address
 
